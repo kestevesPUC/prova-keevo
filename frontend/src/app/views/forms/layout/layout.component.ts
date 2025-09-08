@@ -18,6 +18,7 @@ import {
   InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
+
 import { DocsComponentsComponent, DocsExampleComponent } from '@docs-components/public-api';
 
 @Component({

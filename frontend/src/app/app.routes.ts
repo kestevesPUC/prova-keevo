@@ -38,10 +38,6 @@ export const routes: Routes = [
         loadChildren: () => import('./views/tarefas/routes').then((m) => m.routes)
       },
       {
-        path: 'tarefa',
-        loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
-      },
-      {
         path: 'icons',
         loadChildren: () => import('./views/icons/routes').then((m) => m.routes)
       },

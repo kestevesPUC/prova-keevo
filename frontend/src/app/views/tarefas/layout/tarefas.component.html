@@ -1,3 +1,28 @@
-<c-row>
-    SAFFNK
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>Tarefas Pendentes</strong>
+            </c-card-header>
+            <c-card-body>
+                <form cForm>
+                    <c-row>
+                        <c-col *ngFor="let item of colors; index as i" [lg]="4">
+                            <c-card [cBorder]="item.color" [textColor]="item.textColor" class="mb-3">
+                                <c-card-header>Header</c-card-header>
+                                <c-card-body>
+                                    <h5 cCardTitle>{{item.color}} card title</h5>
+                                    <p cCardText> 
+                                        Some quick example text to build on the card title and make up the bulk of
+                                        the card&#39;s content.
+                                    </p>
+                                    <button [color]="item.color" cButton>Go somewhere</button>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </form>
+            </c-card-body>
+        </c-card>
+    </c-col>
 </c-row>

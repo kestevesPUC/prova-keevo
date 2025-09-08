@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
+import { AjaxService } from '../../../services/ajax.service'
 
 import {
   CardBodyComponent,
@@ -46,6 +47,8 @@ import { DocsComponentsComponent } from '@docs-components/public-api';
   styleUrl: './tarefas.component.scss'
 })
 export class TarefasComponent { 
+  
+  icon = "cil-plus";
   colors = [
     { color: 'primary', textColor: 'primary' },
     { color: 'secondary', textColor: 'secondary' },
@@ -56,4 +59,10 @@ export class TarefasComponent {
     { color: 'light', textColor: '' },
     { color: 'dark', textColor: '' }
   ];
+
+  constructor(private ajax: AjaxService) {}
+
+  cadastrar() {
+    // this.ajax.post("", {});
+  }
 }

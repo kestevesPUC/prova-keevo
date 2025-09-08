@@ -6,7 +6,7 @@ import axios from 'axios';
 })
 export class AjaxService {
 
-  async post(url: string, dados: JSON) {
+  async post(url: string, dados: any) {
     let result = {};
 
     await axios.post(url, dados)

@@ -34,6 +34,14 @@ export const routes: Routes = [
         loadChildren: () => import('./views/forms/routes').then((m) => m.routes)
       },
       {
+        path: 'tarefas',
+        loadChildren: () => import('./views/tarefas/routes').then((m) => m.routes)
+      },
+      {
+        path: 'tarefa',
+        loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
+      },
+      {
         path: 'icons',
         loadChildren: () => import('./views/icons/routes').then((m) => m.routes)
       },
@@ -53,6 +61,7 @@ export const routes: Routes = [
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
       }
+      
     ]
   },
   {

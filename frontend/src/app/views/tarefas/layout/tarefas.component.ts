@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { AjaxService } from '../../../services/ajax.service'
 
@@ -60,12 +60,19 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './tarefas.component.html',
   styleUrl: './tarefas.component.scss'
 })
-export class TarefasComponent {
+export class TarefasComponent implements OnInit {
+
+  @ViewChild('modalXl') modalXl!: ModalComponent;
+
+  url = `http://localhost:5235/api/tarefa`;
+
   tarefa = {
-    titulo: '',
-    descricaoBreve: '',
-    descricaoLonga: ''
-  };
+    titulo: "",
+    descBreve: "",
+    descDetalhada: "",
+    statusId: 1
+  }
+
   icon = "cil-plus";
   colors = [
     { color: 'primary', textColor: 'primary' },
@@ -80,8 +87,20 @@ export class TarefasComponent {
 
   constructor(private ajax: AjaxService) { }
 
-  cadastrar() {
+  ngOnInit(): void {
+    this.read();
+  }
+
+  async create() {
     console.log(this.tarefa); // Aqui você pega os dados do formulário
-    // this.ajax.post("", {});
+    let result = await this.ajax.post(this.url, this.tarefa);
+
+    console.log(result);
+
+  }
+
+  async read() {
+    // let result = await this.ajax.get(this.url, {});
+    console.log("aqui");
   }
 }

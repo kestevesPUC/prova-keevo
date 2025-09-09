@@ -1,7 +1,7 @@
 public interface IMaintanable<T>
 {
-    Task<dynamic> Create(T obj);
+    Task<bool> Create(T obj);
     Task<T> Read(int id);
-    Task<dynamic> Update(T id);
-    Task<bool> Delete(int id);
+    Task<bool> Update(T obj);
+    Task<bool> Delete(T obj);
 }

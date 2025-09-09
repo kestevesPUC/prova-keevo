@@ -48,11 +48,11 @@
             </div>
             <div class="mb-3">
                 <label cLabel for="title">Descrição Breve</label>
-                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.descricaoBreve" placeholder="Nome da tarefa" type="text" />
+                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.descBreve" placeholder="Nome da tarefa" type="text" />
             </div>
             <div class="mb-3">
                 <label cLabel for="descricaoLonga">Descrição Longa</label>
-                <textarea cFormControl id="descricaoLonga" name="descricaoLonga" [(ngModel)]="tarefa.descricaoLonga" rows="3"></textarea>
+                <textarea cFormControl id="descricaoLonga" name="descricaoLonga" [(ngModel)]="tarefa.descDetalhada" rows="3"></textarea>
             </div>
         </form>
     </c-modal-body>
@@ -62,7 +62,7 @@
 
     <c-row class="d-flex justify-content-end mb-3 m-3">
         <c-col class="d-flex justify-content-end ">
-            <button cButton color="primary" variant="outline" (click)="cadastrar()">
+            <button cButton color="primary" variant="outline" (click)="create()">
                 Salvar
             </button>
             <button cButton color="secundary" variant="outline" [cModalToggle]="modalXl.id">

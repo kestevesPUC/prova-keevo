@@ -15,28 +15,114 @@ public class TarefaController
         this._tarefaRepo = new TarefaRepo(dbContext);
     }
 
-    [HttpGet("read")]
-    public async Task<Tarefa?> Read([FromHeader] int id)
+    [HttpGet("{id}")]
+    public async Task<dynamic?> Read(int id)
     {
-        return await this._tarefaRepo.Read(id);
+        Tarefa? tarefa = await this._tarefaRepo.Read(id);
+
+        if (tarefa != null)
+        {
+            return new
+            {
+                success = true,
+                status = 200,
+                data = tarefa
+            };
+        }
+        return new
+        {
+            success = false,
+            status = 404,
+            message = "Tarefa não encontrada."
+        };
     }
 
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<dynamic> Create(Tarefa tarefa)
     {
-        tarefa.dataCriacao = Util.DateTimeNow();
-        return await this._tarefaRepo.Create(tarefa);
+        try
+        {
+            tarefa.dataCriacao = Util.DateTimeNow();
+            bool success = await this._tarefaRepo.Create(tarefa);
+
+            if (success)
+            {
+                return new
+                {
+                    success = true,
+                    status = 200,
+                    message = "Tarefa criada com sucesso!"
+                };
+            }
+
+            return new
+            {
+                success = false,
+                status = 400,
+                message = "Erro ao criar tarefa."
+            };
+        }
+        catch (System.Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+            return new
+            {
+                success = false,
+                status = 500,
+                message = "Houve um erro interno no servidor. Tente novamente mais tarde."
+            };
+        }
     }
 
-    [HttpDelete("delete")]
-    public Task<dynamic> Delete(int id)
+    [HttpDelete("{id}")]
+    public async Task<dynamic> Delete(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Tarefa tarefa = await this._tarefaRepo.Read(id);
+
+            if (tarefa == null)
+            {
+                return new
+                {
+                    success = false,
+                    status = 404,
+                    message = "Tarefa não encontrada."
+                };
+            }
+
+            bool success = await this._tarefaRepo.Delete(tarefa);
+
+            if (success)
+            {
+                return new
+                {
+                    success = true,
+                    status = 200,
+                    message = "Tarefa deletada com sucesso."
+                };
+            }
+
+            return new
+            {
+                success = false,
+                status = 400,
+                message = "Não foi possível deletar a tarefa."
+            };
+        }
+        catch (System.Exception e)
+        {
+            System.Console.WriteLine(e.Message);
+            return new
+            {
+                success = false,
+                status = 500,
+                message = "Houve um erro interno no servidor. Tente novamente mais tarde."
+            };
+        }
     }
 
-
-    
-    [HttpPut("update")]
+    [HttpPut("{id}")]
     public async Task<dynamic> Update(int id, string? titulo = null, string? descBreve = null, string? descDetalhada = null, int status_id = 0)
     {
         Tarefa tarefa = await this._tarefaRepo.Read(id);
@@ -59,9 +145,9 @@ public class TarefaController
 
         if (status_id != 0)
         {
-            tarefa.status_id = status_id;
+            tarefa.statusId = status_id;
         }
-    
+
         bool result = await this._tarefaRepo.Update(tarefa);
 
         if (result)

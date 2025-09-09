@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     [DbContext(typeof(KeevoDbContext))]
-    [Migration("20250909104713_createTables")]
+    [Migration("20250909163751_createTables")]
     partial class createTables
     {
         /// <inheritdoc />
@@ -24,6 +24,24 @@ namespace backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Status", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("descricao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("descricao");
+
+                    b.HasKey("id");
+
+                    b.ToTable("status", "public");
+                });
 
             modelBuilder.Entity("Tarefa", b =>
                 {
@@ -51,7 +69,7 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("descricao_detalhada");
 
-                    b.Property<int>("status_id")
+                    b.Property<int>("statusId")
                         .HasColumnType("integer")
                         .HasColumnName("status_id");
 
@@ -62,7 +80,20 @@ namespace backend.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Tarefa", "public");
+                    b.HasIndex("statusId");
+
+                    b.ToTable("tarefa", "public");
+                });
+
+            modelBuilder.Entity("Tarefa", b =>
+                {
+                    b.HasOne("Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("statusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Status");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
-[Table("Tarefa")]
+[Table("tarefa")]
 public class Tarefa
 {
     [Key]
@@ -17,7 +18,9 @@ public class Tarefa
     public string descDetalhada { get; set; }
 
     [Column("status_id")]
-    public int status_id { get; set; }
+    public int statusId { get; set; }
+
+    public Status? Status { get; set; }
     
     [Column("data_cad")]
     public DateTime? dataCriacao { get; set; }

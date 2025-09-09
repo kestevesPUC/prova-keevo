@@ -9,13 +9,17 @@ export class AjaxService {
   async post(url: string, dados: any) {
     let result = {};
 
-    await axios.post(url, dados)
+    await axios.post(url, dados, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
       .then((response) => {
         result = response.data
       })
       .catch((error) => {
         console.log(`Erro: ${error}`);
-        
+
         result = {
           success: false,
           status: 400,
@@ -23,6 +27,11 @@ export class AjaxService {
         }
       });
 
-      return result;
+    return result;
+  }
+
+  async get(url: string, params: any) {
+    let result = {};
+
   }
 }

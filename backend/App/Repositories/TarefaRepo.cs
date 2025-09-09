@@ -9,49 +9,22 @@ public class TarefaRepo : IMaintanable<Tarefa>
         this._context = contex;
     }
 
-    public async Task<dynamic> Create(Tarefa tarefa)
+    public async Task<bool> Create(Tarefa tarefa)
     {
-        try
-        {
-            this._context.Add(tarefa);
-
-            if (this._context.SaveChanges() > 0)
-            {
-                return new
-                {
-                    success = true,
-                    status = 200,
-                    message = "Tarefa criada com sucesso"
-                };
-            }
-
-            return new
-            {
-                success = false,
-                status = 400,
-                message = "Erro ao criar tarefa."
-            };
-        }
-        catch (System.Exception e)
-        {
-            System.Console.WriteLine(e.Message);
-            return new
-            {
-                success = false,
-                status = 500,
-                message = "Houve um erro interno no servidor. Tente novamente mais tarde."
-            };
-        }
+        this._context.tarefa.Add(tarefa);
+        return await this._context.SaveChangesAsync() > 0;
     }
 
-    public Task<bool> Delete(int id)
+    public async Task<bool> Delete(Tarefa tarefa)
     {
-        throw new NotImplementedException();
+        this._context.tarefa.Remove(tarefa);
+        return await this._context.SaveChangesAsync() > 0;
     }
 
     public async Task<Tarefa?> Read(int id)
     {
         return await this._context.tarefa
+            .Include(t => t.Status)
             .Where(t => t.id == id)
             .FirstOrDefaultAsync();
     }

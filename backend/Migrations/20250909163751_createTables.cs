@@ -16,7 +16,21 @@ namespace backend.Migrations
                 name: "public");
 
             migrationBuilder.CreateTable(
-                name: "Tarefa",
+                name: "status",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    descricao = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_status", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tarefa",
                 schema: "public",
                 columns: table => new
                 {
@@ -31,15 +45,32 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tarefa", x => x.id);
+                    table.PrimaryKey("PK_tarefa", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_tarefa_status_status_id",
+                        column: x => x.status_id,
+                        principalSchema: "public",
+                        principalTable: "status",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tarefa_status_id",
+                schema: "public",
+                table: "tarefa",
+                column: "status_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tarefa",
+                name: "tarefa",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "status",
                 schema: "public");
         }
     }

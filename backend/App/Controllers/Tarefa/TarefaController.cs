@@ -1,40 +1,85 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 
 [Route("api/tarefa")]
 [ApiController]
-public class TarefaController : IMaintanable<Tarefa>
+public class TarefaController
 {
-    public TarefaController()
+    private TarefaRepo _tarefaRepo;
+    private KeevoDbContext _dbContext;
+    public TarefaController(KeevoDbContext dbContext)
     {
-        
+        this._dbContext = dbContext;
+        this._tarefaRepo = new TarefaRepo(dbContext);
     }
-    
+
     [HttpGet("read")]
-    public Task<Tarefa> Read(int id)
+    public async Task<Tarefa?> Read([FromHeader] int id)
     {
-        throw new NotImplementedException();
+        return await this._tarefaRepo.Read(id);
     }
 
     [HttpPost("create")]
-    public Task<Tarefa> Create(Tarefa obj)
+    public async Task<dynamic> Create(Tarefa tarefa)
     {
-        throw new NotImplementedException();
+        tarefa.dataCriacao = Util.DateTimeNow();
+        return await this._tarefaRepo.Create(tarefa);
     }
 
-    [HttpPost("delete")]
-    public Task<bool> Delete(int id)
+    [HttpDelete("delete")]
+    public Task<dynamic> Delete(int id)
     {
         throw new NotImplementedException();
     }
 
 
     
-    [HttpPost("update")]
-    public Task<bool> Update(Tarefa obj)
+    [HttpPut("update")]
+    public async Task<dynamic> Update(int id, string? titulo = null, string? descBreve = null, string? descDetalhada = null, int status_id = 0)
     {
-        throw new NotImplementedException();
+        Tarefa tarefa = await this._tarefaRepo.Read(id);
+        tarefa.dataAtualizacao = Util.DateTimeNow();
+
+        if (titulo != null)
+        {
+            tarefa.titulo = titulo;
+        }
+
+        if (descBreve != null)
+        {
+            tarefa.descBreve = descBreve;
+        }
+
+        if (descDetalhada != null)
+        {
+            tarefa.descDetalhada = descDetalhada;
+        }
+
+        if (status_id != 0)
+        {
+            tarefa.status_id = status_id;
+        }
+    
+        bool result = await this._tarefaRepo.Update(tarefa);
+
+        if (result)
+        {
+            return new
+            {
+                success = true,
+                status = 200,
+                message = "Tarefa atualizada com sucesso"
+            };
+        }
+
+        return new
+        {
+            success = false,
+            status = 400,
+            message = "Erro ao atualizar tarefa."
+        };
     }
 }
 

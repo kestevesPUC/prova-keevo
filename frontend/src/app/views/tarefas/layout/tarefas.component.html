@@ -1,4 +1,4 @@
-<c-row >
+<c-row>
     <c-col xs="12">
         <c-card class="mb-4">
             <c-card-header>
@@ -8,7 +8,7 @@
                 <form cForm>
                     <c-row class="d-flex justify-content-end mb-3">
                         <c-col class="d-flex justify-content-end">
-                            <button cButton color="primary" variant="outline" (click)="cadastrar()">
+                            <button cButton color="primary" variant="outline" [cModalToggle]="modalXl.id">
                                 Cadastrar
                             </button>
                         </c-col>
@@ -17,12 +17,11 @@
                         @for (item of colors; track $index) {
                         <c-col [lg]="4">
                             <c-card [cBorder]="item.color" [textColor]="item.textColor" class="mb-3">
-                                <c-card-header>Header</c-card-header>
+                                <c-card-header>Title</c-card-header>
                                 <c-card-body>
-                                    <h5 cCardTitle>{{ item.color }} card title</h5>
+                                    <h5 cCardTitle>Descrição Breve</h5>
                                     <p cCardText>
-                                        Some quick example text to build on the card title and make up the bulk of
-                                        the card's content.
+                                        Descrição detalhada.
                                     </p>
                                     <button [color]="item.color" cButton>Go somewhere</button>
                                 </c-card-body>
@@ -35,3 +34,41 @@
         </c-card>
     </c-col>
 </c-row>
+
+
+<c-modal #modalXl id="modalXl" size="xl">
+    <c-modal-header>
+        <h5 cModalTitle>Cadastrar tarefa</h5>
+    </c-modal-header>
+    <c-modal-body>
+        <form cForm>
+            <div class="mb-3">
+                <label cLabel for="title">Título</label>
+                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.titulo" placeholder="Nome da tarefa" type="text" />
+            </div>
+            <div class="mb-3">
+                <label cLabel for="title">Descrição Breve</label>
+                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.descricaoBreve" placeholder="Nome da tarefa" type="text" />
+            </div>
+            <div class="mb-3">
+                <label cLabel for="descricaoLonga">Descrição Longa</label>
+                <textarea cFormControl id="descricaoLonga" name="descricaoLonga" [(ngModel)]="tarefa.descricaoLonga" rows="3"></textarea>
+            </div>
+        </form>
+    </c-modal-body>
+
+    <c-modal-header>
+    </c-modal-header>
+
+    <c-row class="d-flex justify-content-end mb-3 m-3">
+        <c-col class="d-flex justify-content-end ">
+            <button cButton color="primary" variant="outline" (click)="cadastrar()">
+                Salvar
+            </button>
+            <button cButton color="secundary" variant="outline" [cModalToggle]="modalXl.id">
+                Fechar
+            </button>
+        </c-col>
+    </c-row>
+
+</c-modal>

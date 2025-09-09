@@ -4,13 +4,37 @@ using Microsoft.AspNetCore.Mvc;
 
 [Route("api/tarefa")]
 [ApiController]
-public class NomeController : ControllerBase
+public class TarefaController : IMaintanable<Tarefa>
 {
-
-    [HttpPost("tarefa")]
-    public async Task<dynamic> Index([FromBody] string teste)
+    public TarefaController()
     {
-        return teste;
+        
+    }
+    
+    [HttpGet("read")]
+    public Task<Tarefa> Read(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPost("create")]
+    public Task<Tarefa> Create(Tarefa obj)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPost("delete")]
+    public Task<bool> Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+
+    
+    [HttpPost("update")]
+    public Task<bool> Update(Tarefa obj)
+    {
+        throw new NotImplementedException();
     }
 }
 

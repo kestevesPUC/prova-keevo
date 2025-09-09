@@ -17,11 +17,19 @@ import {
   RowDirective,
   BorderDirective,
   CardTextDirective,
-  CardTitleDirective
-  
+  CardTitleDirective,
+  ModalBodyComponent,
+  ModalComponent,
+  ModalHeaderComponent,
+  ModalTitleDirective,
+  ModalToggleDirective
+
 } from '@coreui/angular';
 
 import { DocsComponentsComponent } from '@docs-components/public-api';
+import { FormsModule } from '@angular/forms';
+
+
 @Component({
   selector: 'app-tarefas',
   imports: [
@@ -41,13 +49,23 @@ import { DocsComponentsComponent } from '@docs-components/public-api';
     BorderDirective,
     CardTextDirective,
     CardTitleDirective,
-    NgFor
+    NgFor,
+    ModalBodyComponent,
+    ModalComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective,
+    ModalToggleDirective,
+    FormsModule
   ],
   templateUrl: './tarefas.component.html',
   styleUrl: './tarefas.component.scss'
 })
-export class TarefasComponent { 
-  
+export class TarefasComponent {
+  tarefa = {
+    titulo: '',
+    descricaoBreve: '',
+    descricaoLonga: ''
+  };
   icon = "cil-plus";
   colors = [
     { color: 'primary', textColor: 'primary' },
@@ -60,9 +78,10 @@ export class TarefasComponent {
     { color: 'dark', textColor: '' }
   ];
 
-  constructor(private ajax: AjaxService) {}
+  constructor(private ajax: AjaxService) { }
 
   cadastrar() {
+    console.log(this.tarefa); // Aqui você pega os dados do formulário
     // this.ajax.post("", {});
   }
 }

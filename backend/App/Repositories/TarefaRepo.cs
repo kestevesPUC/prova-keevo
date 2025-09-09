@@ -29,6 +29,14 @@ public class TarefaRepo : IMaintanable<Tarefa>
             .FirstOrDefaultAsync();
     }
 
+    public async Task<List<Tarefa>> ReadAll()
+    {
+        return await this._context.tarefa
+            .OrderBy(t => t.id)
+            .Include(t => t.Status)
+            .ToListAsync();
+    }
+
    
     public async Task<bool> Update(Tarefa tarefa)
     {

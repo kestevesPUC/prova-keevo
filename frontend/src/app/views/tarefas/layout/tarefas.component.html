@@ -14,16 +14,16 @@
                         </c-col>
                     </c-row>
                     <c-row>
-                        @for (item of colors; track $index) {
+                        @for (tarefa of tarefas; track $index) {
                         <c-col [lg]="4">
-                            <c-card [cBorder]="item.color" [textColor]="item.textColor" class="mb-3">
-                                <c-card-header>Title</c-card-header>
+                            <c-card [cBorder]="tarefa.color" [textColor]="tarefa.textColor" class="mb-3">
+                                <c-card-header><b>#{{tarefa.id}} {{ tarefa.titulo }}</b></c-card-header>
                                 <c-card-body>
-                                    <h5 cCardTitle>Descrição Breve</h5>
+                                    <h5 cCardTitle>{{ tarefa.descBreve }}</h5>
                                     <p cCardText>
-                                        Descrição detalhada.
+                                        {{ tarefa.descDetalhada }}
                                     </p>
-                                    <button [color]="item.color" cButton>Go somewhere</button>
+                                    <button [color]="tarefa.color" cButton>Visualizar</button>
                                 </c-card-body>
                             </c-card>
                         </c-col>

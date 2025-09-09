@@ -6,7 +6,7 @@ import axios from 'axios';
 })
 export class AjaxService {
 
-  async post(url: string, dados: any) {
+  async post(url: string, dados: any): Promise<any> {
     let result = {};
 
     await axios.post(url, dados, {
@@ -30,8 +30,25 @@ export class AjaxService {
     return result;
   }
 
-  async get(url: string, params: any) {
+  async get(url: string): Promise<any> {
     let result = {};
+    await axios.get(url, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      result = response.data
+    })
+      .catch((error) => {
+        console.log(`Erro: ${error}`);
 
+        result = {
+          success: false,
+          status: 400,
+          message: "Falha ao fazer a requisição!"
+        }
+      });
+
+    return result;
   }
 }

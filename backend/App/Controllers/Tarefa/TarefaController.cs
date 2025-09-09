@@ -36,6 +36,28 @@ public class TarefaController
             message = "Tarefa não encontrada."
         };
     }
+    
+    [HttpGet]
+    public async Task<dynamic> ReadAll()
+    {
+        List<Tarefa> tarefas = await this._tarefaRepo.ReadAll();
+
+        if (tarefas != null)
+        {
+            return new
+            {
+                success = true,
+                status = 200,
+                data = tarefas
+            };
+        }
+        return new
+        {
+            success = false,
+            status = 404,
+            message = "Não foi possível recuperar as tarefas."
+        };
+    }
 
     [HttpPost]
     public async Task<dynamic> Create(Tarefa tarefa)

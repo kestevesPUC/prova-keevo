@@ -5,6 +5,7 @@ public class KeevoDbContext : DbContext
     { }
 
     public DbSet<Tarefa> tarefa { get; set; }
+    public DbSet<Status> status { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -2,7 +2,7 @@
     <c-col xs="12">
         <c-card class="mb-4">
             <c-card-header>
-                <strong>Tarefas Pendentes</strong>
+                <strong>Tarefas</strong>
             </c-card-header>
             <c-card-body>
                 <form cForm>
@@ -17,13 +17,27 @@
                         @for (tarefa of tarefas; track $index) {
                         <c-col [lg]="4">
                             <c-card [cBorder]="tarefa.color" [textColor]="tarefa.textColor" class="mb-3">
-                                <c-card-header><b>#{{tarefa.id}} {{ tarefa.titulo }}</b></c-card-header>
+                                <c-card-header>
+
+                                    <c-row class="row d-flex justify-content-between align-items-center w-100">
+                                        <c-col class="d-flex justify-content-between align-items-center">
+                                            <b>#{{tarefa.id}} - {{ tarefa.titulo }}</b>
+                                            <button cButton color="danger" title="Deletar" variant="outline"
+                                                (click)="delete(tarefa.id)">
+                                                <svg cIcon [name]="'cil-trash'" size="sm"></svg>
+                                            </button>
+
+                                        </c-col>
+                                    </c-row>
+                                </c-card-header>
                                 <c-card-body>
                                     <h5 cCardTitle>{{ tarefa.descBreve }}</h5>
                                     <p cCardText>
                                         {{ tarefa.descDetalhada }}
                                     </p>
-                                    <button [color]="tarefa.color" cButton>Visualizar</button>
+                                    <button [color]="tarefa.color" type="button" cButton
+                                        (click)="abrirModalVisualizar(tarefa)">
+                                        Visualizar</button>
                                 </c-card-body>
                             </c-card>
                         </c-col>
@@ -38,21 +52,39 @@
 
 <c-modal #modalXl id="modalXl" size="xl">
     <c-modal-header>
+        @if(tarefa.id == 0) {
         <h5 cModalTitle>Cadastrar tarefa</h5>
+        } @else {
+        <h5 cModalTitle>Editar tarefa #{{tarefa.id}}</h5>
+        }
     </c-modal-header>
     <c-modal-body>
         <form cForm>
+            @if(tarefa.id != 0) {
+            <div class="mb-3">
+                <label cLabel for="Data abertura">Data Abertura: {{ formatarDataBR(tarefa.dataCriacao) }}</label>
+            </div>
+            }
+            @if(tarefa.id != 0 && tarefa.dataAtualizacao) {
+            <div class="mb-3">
+                <label cLabel for="Data atualização">Data Atualização: {{ formatarDataBR(tarefa.dataAtualizacao)
+                    }}</label>
+            </div>
+            }
             <div class="mb-3">
                 <label cLabel for="title">Título</label>
-                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.titulo" placeholder="Nome da tarefa" type="text" />
+                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.titulo" placeholder="Nome da tarefa"
+                    type="text" />
             </div>
             <div class="mb-3">
                 <label cLabel for="title">Descrição Breve</label>
-                <input cFormControl id="title" name="title" [(ngModel)]="tarefa.descBreve" placeholder="Nome da tarefa" type="text" />
+                <input cFormControl id="dataCad" name="dataCad" [(ngModel)]="tarefa.descBreve"
+                    placeholder="Nome da tarefa" type="text" />
             </div>
             <div class="mb-3">
                 <label cLabel for="descricaoLonga">Descrição Longa</label>
-                <textarea cFormControl id="descricaoLonga" name="descricaoLonga" [(ngModel)]="tarefa.descDetalhada" rows="3"></textarea>
+                <textarea cFormControl id="descricaoLonga" name="descricaoLonga" [(ngModel)]="tarefa.descDetalhada"
+                    rows="3"></textarea>
             </div>
         </form>
     </c-modal-body>
@@ -62,12 +94,21 @@
 
     <c-row class="d-flex justify-content-end mb-3 m-3">
         <c-col class="d-flex justify-content-end ">
+            @if(tarefa.id != 0) {
+            <button cButton color="primary" variant="outline" (click)="update(tarefa.id)">
+                Atualizar
+            </button>
+            <button cButton color="secundary" variant="outline" [cModalToggle]="modalXl.id">
+                Fechar
+            </button>
+            } @else {
             <button cButton color="primary" variant="outline" (click)="create()">
                 Salvar
             </button>
             <button cButton color="secundary" variant="outline" [cModalToggle]="modalXl.id">
                 Fechar
             </button>
+            }
         </c-col>
     </c-row>
 

@@ -41,6 +41,8 @@ public class TarefaController
     public async Task<dynamic> ReadAll()
     {
         List<Tarefa> tarefas = await this._tarefaRepo.ReadAll();
+        StatusRepo statusRepo = new StatusRepo(this._dbContext);
+        List<Status> listStatus = await statusRepo.ReadAll();
 
         if (tarefas != null)
         {
@@ -48,7 +50,8 @@ public class TarefaController
             {
                 success = true,
                 status = 200,
-                data = tarefas
+                data = tarefas,
+                listStatus = listStatus
             };
         }
         return new
@@ -145,8 +148,13 @@ public class TarefaController
     }
 
     [HttpPut("{id}")]
-    public async Task<dynamic> Update(int id, string? titulo = null, string? descBreve = null, string? descDetalhada = null, int status_id = 0)
+    public async Task<dynamic> Update(int id, [FromBody] Tarefa tarefaBody)
     {
+        string? titulo = tarefaBody.titulo;
+        string? descBreve = tarefaBody.descBreve;
+        string? descDetalhada = tarefaBody.descDetalhada;
+        int status_id = tarefaBody.statusId;
+
         Tarefa tarefa = await this._tarefaRepo.Read(id);
         tarefa.dataAtualizacao = Util.DateTimeNow();
 

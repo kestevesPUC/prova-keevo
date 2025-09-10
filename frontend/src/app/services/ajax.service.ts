@@ -51,4 +51,45 @@ export class AjaxService {
 
     return result;
   }
+
+  async delete(url: string, id: number): Promise<any> {
+    let result = {};
+    await axios.delete(`${url}/${id}`)
+      .then((response) => {
+        result = response.data
+      })
+      .catch((error) => {
+        console.log(`Erro: ${error}`);
+
+        result = {
+          success: false,
+          status: 400,
+          message: "Falha ao fazer a requisição!"
+        }
+      });
+
+    return result;
+
+
+  }
+  async put(url: string, dados: any): Promise<any> {
+    let result = {};
+    await await axios.put(`${url}`, dados)
+      .then((response) => {
+        result = response.data
+      })
+      .catch((error) => {
+        console.log(`Erro: ${error}`);
+
+        result = {
+          success: false,
+          status: 400,
+          message: "Falha ao fazer a requisição!"
+        }
+      });
+
+    return result;
+
+
+  }
 }

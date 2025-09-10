@@ -4,4 +4,6 @@ public interface IMaintanable<T>
     Task<T> Read(int id);
     Task<bool> Update(T obj);
     Task<bool> Delete(T obj);
+
+    Task<List<T>> ReadAll();
 }

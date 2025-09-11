@@ -21,12 +21,14 @@ dotnet ef database update
 ## Frontend
 ``` bash
 cd ./frontend
+npm install
 npm start
 ``` 
 
 ## Backend
 ``` bash
 cd ./backend
+dotnet restore
 dotnet run
 ``` 
 

@@ -154,6 +154,9 @@ export class TarefasComponent implements OnInit {
         if(t.statusId == 3) {
           t.color = 'success';
           t.textColor = 'success';
+        } else if(t.statusId == 2) {
+          t.color = 'info';
+          t.textColor = 'info';
         } else if (diffHoras > 24) {
           t.color = 'danger';
           t.textColor = 'danger';

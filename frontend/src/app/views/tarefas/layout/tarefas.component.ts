@@ -3,6 +3,7 @@ import { NgFor } from '@angular/common';
 import { AjaxService } from '../../../services/ajax.service'
 import Swal from 'sweetalert2';
 import { IconModule } from '@coreui/icons-angular';
+import * as XLSX from 'xlsx';
 import {
   CardBodyComponent,
   CardComponent,
@@ -23,17 +24,21 @@ import {
   ModalComponent,
   ModalHeaderComponent,
   ModalTitleDirective,
-  ModalToggleDirective
+  ModalToggleDirective,
+  FormSelectDirective
 
 } from '@coreui/angular';
 
 import { DocsComponentsComponent } from '@docs-components/public-api';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 
 @Component({
   selector: 'app-tarefas',
   imports: [
+    ReactiveFormsModule,
+    FormSelectDirective,
     RowComponent,
     ColComponent,
     CardComponent,
@@ -90,8 +95,19 @@ export class TarefasComponent implements OnInit {
     dataAtualizacao: new Date(),
   }
 
+  filtros: any = {
+    titulo: "",
+    descBreve: "",
+    descDetalhada: "",
+    statusId: 0,
+    dataCriacao: new Date(),
+    dataAtualizacao: new Date(),
+  }
+
   icon = "cil-plus";
   tarefas: any[] = [];
+  tarefasBkp: any[] = [];
+  listStatus: any[] = [];
 
   constructor(private ajax: AjaxService) { }
 
@@ -99,21 +115,14 @@ export class TarefasComponent implements OnInit {
     this.readAll();
   }
 
-  abrirModalVisualizar(tarefaSelecionada: any) {
-    this.tarefa = { ...tarefaSelecionada }; // Clona os dados da tarefa clicada
+  abrirModalVisualizar(tarefa: any) {
+    console.log(tarefa);
+
+    this.tarefa = tarefa; // Clona os dados da tarefa clicada
     this.modalXl.visible = true;
   }
 
   async create() {
-    this.tarefa = {
-      id: 0,
-      titulo: "",
-      descBreve: "",
-      descDetalhada: "",
-      statusId: 1,
-      dataCriacao: new Date(),
-      dataAtualizacao: new Date(),
-    }
     let result = await this.ajax.post(this.url, this.tarefa);
 
     if (result.success) {
@@ -130,6 +139,8 @@ export class TarefasComponent implements OnInit {
 
   async readAll() {
     let result = await this.ajax.get(this.url);
+    console.log(result);
+
     let dados = result.data || [];
     let arr: any[] = [];
 
@@ -139,7 +150,11 @@ export class TarefasComponent implements OnInit {
         const agora = new Date();
         const diffMs = agora.getTime() - dataCriacao.getTime();
         const diffHoras = diffMs / (1000 * 60 * 60);
-        if (diffHoras > 24) {
+
+        if(t.statusId == 3) {
+          t.color = 'success';
+          t.textColor = 'success';
+        } else if (diffHoras > 24) {
           t.color = 'danger';
           t.textColor = 'danger';
         } else {
@@ -151,13 +166,15 @@ export class TarefasComponent implements OnInit {
       }
     });
     this.tarefas = arr;
+    this.tarefasBkp = arr;
+    this.listStatus = result.listStatus || [];
   }
 
-  async update(id: number) {
+  async update(tarefa: any) {
     console.log(this.tarefa);
-    
+
     const confirm = await Swal.fire({
-      title: `Deseja realmente alterar a tarefa #${id}?`,
+      title: `Deseja realmente alterar a tarefa #${tarefa.id}?`,
       text: 'Esta ação não poderá ser desfeita!',
       icon: 'warning',
       showCancelButton: true,
@@ -166,7 +183,7 @@ export class TarefasComponent implements OnInit {
     });
 
     if (confirm.isConfirmed) {
-      let result = await this.ajax.put(`${this.url}/${id}`, this.tarefa);
+      let result = await this.ajax.put(`${this.url}/${tarefa.id}`, tarefa);
       if (result.success) {
         Swal.fire('Sucesso!', result.message, 'success');
         this.readAll();
@@ -205,4 +222,72 @@ export class TarefasComponent implements OnInit {
   fecharModal() {
     this.modalXl.visible = false;
   }
+
+
+  resetarFormulario() {
+    this.tarefa = {
+      id: 0,
+      titulo: "",
+      descBreve: "",
+      descDetalhada: "",
+      statusId: 1,
+      dataCriacao: new Date(),
+      dataAtualizacao: new Date(),
+    }
+
+  }
+
+  onSelectChange(event: any) {
+    this.tarefa.statusId = event.target.value;
+  }
+
+  desfazerFiltros() {
+    this.tarefas = this.tarefasBkp;
+  }
+
+  filtrar() {
+    
+      this.desfazerFiltros();
+
+    if (
+      this.filtros.titulo !== "" || this.filtros.descBreve !== "" || this.filtros.descDetalhada !== "" || this.filtros.statusId != "0"
+    )  {      
+      if (this.filtros.titulo !== "") {
+        this.tarefas = this.tarefas.filter(tarefa => {
+          const matchTitulo = this.filtros.titulo === "" || tarefa.titulo.toLowerCase().includes(this.filtros.titulo.toLowerCase());
+
+          return matchTitulo;
+        });
+      }
+      if (this.filtros.descBreve !== "") {
+        this.tarefas = this.tarefas.filter(tarefa => {
+          const matchDescBreve = this.filtros.descBreve === "" || tarefa.descBreve.toLowerCase().includes(this.filtros.descBreve.toLowerCase());
+
+          return matchDescBreve;
+        });
+      }
+      if (this.filtros.descDetalhada !== "") {
+        this.tarefas = this.tarefas.filter(tarefa => {
+          const matchDescDetalhada = this.filtros.descDetalhada === "" || tarefa.descDetalhada.toLowerCase().includes(this.filtros.descDetalhada.toLowerCase());
+
+          return matchDescDetalhada;
+        });
+      }
+      if (this.filtros.statusId != 0) {
+        this.tarefas = this.tarefas.filter(tarefa => {
+          const matchStatus = this.filtros.statusId == 0 || tarefa.statusId.toString() == this.filtros.statusId.toString();
+
+          return matchStatus;
+        });
+      }
+    }
+  }
+
+  exportarExcel(): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tarefas);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Tarefas': worksheet }, SheetNames: ['Tarefas'] };
+    XLSX.writeFile(workbook, 'tarefas.xlsx');
+  }
+
+
 }

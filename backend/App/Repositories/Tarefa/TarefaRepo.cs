@@ -31,8 +31,9 @@ public class TarefaRepo : IMaintanable<Tarefa>
 
     public async Task<List<Tarefa>> ReadAll()
     {
-        return await this._context.tarefa
+        return await this._context.tarefa   
             .OrderBy(t => t.id)
+            .OrderBy(t => t.statusId)
             .Include(t => t.Status)
             .ToListAsync();
     }
